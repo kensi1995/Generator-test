@@ -1,3 +1,17 @@
+// Preload images function
+function preloadImages() {
+  surveyData.forEach((data) => {
+    if (data.options) {
+      data.options.forEach((option) => {
+        if (option.imgSrc) {
+          const img = new Image();
+          img.src = option.imgSrc;
+        }
+      });
+    }
+  });
+}
+
 // Initialize the survey questions and options
 const surveyData = [
   {
@@ -105,7 +119,7 @@ function loadQuestion() {
 
   if (questionData.inputField) {
     // For ZIP, Address, and Email questions with input fields
-    questionContainer.innerHTML += `
+    questionContainer.innerHTML += `  
       <input type="${questionData.type}" id="user-input" placeholder="${questionData.placeholder}">
       <button onclick="handleInputSubmit()">Submit</button>
     `;
@@ -132,7 +146,7 @@ function loadQuestion() {
     const backButton = document.createElement("button");
 
     // Set the inner HTML to include SVG and text
-    backButton.innerHTML = `
+    backButton.innerHTML = `   
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="margin-right: 8px;">
       <path d="M15.41 16.58L10.83 12l4.58-4.59L14 6l-6 6 6 6z" />
     </svg>
@@ -208,6 +222,9 @@ function handleInputSubmit() {
     alert("Survey completed!");
   }
 }
+
+// Preload images before starting the survey
+preloadImages();
 
 // Start the survey
 loadQuestion();

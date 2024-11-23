@@ -1,0 +1,83 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-height: 100px;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.card {
+  display: inline-block;
+  width: 200px;
+  margin: 10px;
+  padding: 15px;
+  background-color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+}
+.card:hover {
+  background-color: #6dffee;
+}
+.card:active {
+  background-color: #27cdba;
+}
+
+.card img {
+  max-width: 75%;
+  height: auto;
+}
+
+.card-title {
+  margin-top: 10px;
+  font-size: 18px;
+}
+
+input[type="text"] {
+  padding: 13px;
+  width: 80%;
+  margin-top: 10px;
+  border: 1px solid #2ed8c3;
+  border-radius: 5px;
+}
+
+button {
+  padding: 10px 20px;
+  margin-left: 10px;
+  background-color: #6dffee;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  margin-top: 5%;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #27cdba;
+}
+
+button:active {
+  background-color: #21ab9b;
+}
+
+#question-container {
+  margin-top: 20px;
+}
+
+#back-button {
+  margin-top: 10px;
+  background-color: #ccc;
+}
+
+#next-button {
+  margin-top: 10px;
+  background-color: #007bff;
+}

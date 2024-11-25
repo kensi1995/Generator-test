@@ -20,6 +20,12 @@ const surveyData = [
       { title: "Roof insulation", imgSrc: "Icons/roof.png" },
       { title: "Window replacement", imgSrc: "Icons/replacement.png" },
       { title: "Façade insulation", imgSrc: "Icons/construction.png" },
+      { title: "Heating replacement", imgSrc: "Icons/construction.png" },
+      {
+        title: "Floor and basement ceiling insulation",
+        imgSrc: "Icons/construction.png",
+      },
+      { title: "Heating optimization", imgSrc: "Icons/construction.png" },
     ],
   },
   {
@@ -223,13 +229,14 @@ function nextQuestion() {
     loadQuestion();
   } else {
     showForm();
+    sendSurveyData(); // Call this function to send the survey data via email
   }
 }
 
 function showForm() {
   const questionContainer = document.getElementById("question-container");
   questionContainer.innerHTML = `
-    <h2 class="form-title" >Enter your information</h2>
+    <h2 class="form-title">Enter your information</h2>
     <form id="user-form">
       <input type="text" id="full-name" placeholder="Full Name" required><br>
       <input type="email" id="email" placeholder="Email" required><br>
@@ -259,10 +266,8 @@ function handleSubmit(event) {
   localStorage.setItem("userInfo", JSON.stringify(userInfo));
 
   // Redirect to another website
-  window.location.href =
-    "https://calendly.com/envisionenergie/kostenloses-strategiegesprach";
+  window.location.href = "";
 }
-
 function initMap() {
   console.log("Initializing map...");
   var mapOptions = {
@@ -363,6 +368,36 @@ function initMap() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  preloadImages();
   loadQuestion();
+  preloadImages();
 });
+
+// Function to send survey data via EmailJS
+function sendSurveyData() {
+  const userData = JSON.stringify(answers); // Assuming 'answers' contains the survey data
+
+  emailjs
+    .send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+      message: userData,
+      to_email: "kenannovalic2@gmail.com", // Replace with your recipient's email
+    })
+    .then(
+      (response) => {
+        console.log("Email sent successfully!", response.status, response.text);
+      },
+      (error) => {
+        console.error("Failed to send email.", error);
+      }
+    );
+}
+
+// Modify your nextQuestion function to call sendSurveyData
+function nextQuestion() {
+  currentQuestionIndex++;
+  if (currentQuestionIndex < surveyData.length) {
+    loadQuestion();
+  } else {
+    showForm();
+    sendSurveyData(); // Call this function to send the survey data via email
+  }
+}

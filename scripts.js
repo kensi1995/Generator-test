@@ -1,34 +1,26 @@
 function preloadImages() {
-  const imagePromises = [];
-
+  const images = [];
   surveyData.forEach((data) => {
     if (data.options) {
       data.options.forEach((option) => {
         if (option.imgSrc) {
           const img = new Image();
           img.src = option.imgSrc;
-
-          const imageLoadPromise = new Promise((resolve, reject) => {
-            img.onload = () => resolve(img);
-            img.onerror = () =>
-              reject(new Error(`Failed to load image: ${option.imgSrc}`));
-          });
-
-          imagePromises.push(imageLoadPromise);
+          img.onload = () => {
+            // Image has been loaded, you can trigger actions here
+            images.push(img); // You could track loaded images here
+          };
+          img.onerror = () =>
+            console.error(`Failed to load image: ${option.imgSrc}`);
         }
       });
     }
   });
 
-  // Wait until all images are loaded before proceeding
-  Promise.all(imagePromises)
-    .then(() => {
-      console.log("All images loaded");
-      loadQuestion(); // Now load the question after preloading images
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+  // Optionally wait until all images are loaded before proceeding
+  // if(images.length === totalExpectedImages) {
+  //     // Perform actions after all images are loaded
+  // }
 }
 // Initialize the survey questions and options
 const surveyData = [

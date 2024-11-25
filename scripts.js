@@ -363,5 +363,6 @@ function initMap() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+  preloadImages();
   loadQuestion();
 });

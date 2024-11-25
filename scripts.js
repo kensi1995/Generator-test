@@ -1,17 +1,11 @@
+// Preload images function
 function preloadImages() {
-  const images = [];
   surveyData.forEach((data) => {
     if (data.options) {
       data.options.forEach((option) => {
         if (option.imgSrc) {
           const img = new Image();
           img.src = option.imgSrc;
-          img.onload = () => {
-            // Image has been loaded, you can trigger actions here
-            images.push(img); // You could track loaded images here
-          };
-          img.onerror = () =>
-            console.error(`Failed to load image: ${option.imgSrc}`);
         }
       });
     }

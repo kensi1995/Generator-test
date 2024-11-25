@@ -1,27 +1,3 @@
-function preloadImages() {
-  const images = [];
-  surveyData.forEach((data) => {
-    if (data.options) {
-      data.options.forEach((option) => {
-        if (option.imgSrc) {
-          const img = new Image();
-          img.src = option.imgSrc;
-          img.onload = () => {
-            // Image has been loaded, you can trigger actions here
-            images.push(img); // You could track loaded images here
-          };
-          img.onerror = () =>
-            console.error(`Failed to load image: ${option.imgSrc}`);
-        }
-      });
-    }
-  });
-
-  // Optionally wait until all images are loaded before proceeding
-  // if(images.length === totalExpectedImages) {
-  //     // Perform actions after all images are loaded
-  // }
-}
 // Initialize the survey questions and options
 const surveyData = [
   {

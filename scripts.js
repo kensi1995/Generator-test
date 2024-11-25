@@ -1,4 +1,3 @@
-// Preload images function
 function preloadImages() {
   surveyData.forEach((data) => {
     if (data.options) {
@@ -6,11 +5,13 @@ function preloadImages() {
         if (option.imgSrc) {
           const img = new Image();
           img.src = option.imgSrc;
+          img.onload = () => console.log(`${option.imgSrc} loaded`);
         }
       });
     }
   });
 }
+
 // Initialize the survey questions and options
 const surveyData = [
   {

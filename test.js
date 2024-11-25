@@ -1,3 +1,4 @@
+// Preload images function
 function preloadImages() {
   surveyData.forEach((data) => {
     if (data.options) {
@@ -15,86 +16,7 @@ function preloadImages() {
 
 // Initialize the survey questions and options
 const surveyData = [
-  {
-    question: "What renovation measures are you planning in the near future?",
-    options: [
-      { title: "Roof insulation", imgSrc: "Icons/roof.png" },
-      { title: "Window replacement", imgSrc: "Icons/replacement.png" },
-      { title: "Façade insulation", imgSrc: "Icons/construction.png" },
-    ],
-  },
-  {
-    question: "How many residential units does the building have?",
-    options: [
-      { title: "1-2 units", imgSrc: "Icons/1-2units.png" },
-      { title: "3-5 units", imgSrc: "Icons/4-5units.png" },
-      { title: "5-10 units", imgSrc: "Icons/5-10units.png" },
-      { title: "10-20 units", imgSrc: "Icons/10-20units.png" },
-      { title: "More than 20 units", imgSrc: "Icons/apartments.png" },
-    ],
-  },
-  {
-    question: "Is the building detached or attached?",
-    options: [
-      { title: "Detached", imgSrc: "Icons/building.png" },
-      { title: "Attached", imgSrc: "Icons/building-att.png" },
-    ],
-  },
-  {
-    question: "Do you live in it yourself?",
-    options: [
-      { title: "Yes", imgSrc: "Icons/check.png" },
-      { title: "No", imgSrc: "Icons/cancel.png" },
-    ],
-  },
-  {
-    question: "Year of construction of the house?",
-    options: [
-      { title: "Before 1920", imgSrc: "Icons/calendar.png" },
-      { title: "1920-1950", imgSrc: "Icons/calendar.png" },
-      { title: "1950-1970", imgSrc: "Icons/calendar.png" },
-      { title: "1970-1990", imgSrc: "Icons/calendar.png" },
-      { title: "After 1990", imgSrc: "Icons/calendar.png" },
-    ],
-  },
-  {
-    question: "What heating system is installed?",
-    options: [
-      { title: "Oil", imgSrc: "Icons/oil-barrel.png" },
-      { title: "Gas", imgSrc: "Icons/gas.png" },
-      { title: "Wood", imgSrc: "Icons/wood.png" },
-    ],
-  },
-  {
-    question: "Have any renovation measures already been carried out?",
-    options: [
-      { title: "Roof insulation", imgSrc: "Icons/roof.png" },
-      { title: "Window replacement", imgSrc: "Icons/replacement.png" },
-      { title: "Façade insulation", imgSrc: "Icons/construction.png" },
-    ],
-  },
-  {
-    question: "How expensive will these measures be approximately?",
-    options: [
-      { title: "Under €20,000", imgSrc: "Icons/money-bag.png" },
-      { title: "€20,000-€40,000", imgSrc: "Icons/money-bag.png" },
-      { title: "€40,000-€60,000", imgSrc: "Icons/money-bag.png" },
-      { title: "€60,000-€100,000", imgSrc: "Icons/money-bag.png" },
-      { title: "Over €100,000", imgSrc: "Icons/money-bag.png" },
-    ],
-  },
-  {
-    question: "Postal code (ZIP)?",
-    inputField: true,
-    placeholder: "Enter your ZIP code",
-    type: "text",
-  },
-  {
-    question: "Enter your address",
-    type: "map",
-    inputField: true,
-    placeholder: "Enter your address",
-  },
+  // ... Your surveyData array ...
 ];
 
 let answers = {};
@@ -163,9 +85,9 @@ function styleMapDiv(mapDiv) {
 
 function renderInputFieldQuestion(container, data) {
   container.innerHTML += `
-    <input type="${data.type}" id="user-input" placeholder="${data.placeholder}">
-    <button onclick="handleInputSubmit()">Submit</button>
-  `;
+        <input type="${data.type}" id="user-input" placeholder="${data.placeholder}">
+        <button onclick="handleInputSubmit()">Submit</button>
+      `;
 }
 
 function renderOptionsQuestion(container, data) {
@@ -173,13 +95,13 @@ function renderOptionsQuestion(container, data) {
     const card = document.createElement("div");
     card.classList.add("card");
     card.innerHTML = `
-      ${
-        option.imgSrc
-          ? `<img src="${option.imgSrc}" alt="${option.title}">`
-          : ""
-      }
-      <div class="card-title">${option.title}</div>
-    `;
+          ${
+            option.imgSrc
+              ? `<img src="${option.imgSrc}" alt="${option.title}">`
+              : ""
+          }
+          <div class="card-title">${option.title}</div>
+        `;
     card.addEventListener("click", () => handleOptionClick(option.title));
     container.appendChild(card);
   });
@@ -223,45 +145,22 @@ function nextQuestion() {
   if (currentQuestionIndex < surveyData.length) {
     loadQuestion();
   } else {
-    showForm();
+    showAnswers();
   }
 }
 
-function showForm() {
+function showAnswers() {
   const questionContainer = document.getElementById("question-container");
-  questionContainer.innerHTML = `
-    <h2 class="form-title" >Enter your information</h2>
-    <form id="user-form">
-      <input type="text" id="full-name" placeholder="Full Name" required><br>
-      <input type="email" id="email" placeholder="Email" required><br>
-      <input type="tel" id="phone" placeholder="Phone Number" required><br>
-      <button type="submit">Submit</button>
-    </form>
-  `;
+  questionContainer.innerHTML = "<h2>Your Answers</h2>";
 
-  const form = document.getElementById("user-form");
-  form.addEventListener("submit", handleSubmit);
-}
+  for (const [key, value] of Object.entries(answers)) {
+    const questionIndex = key.split("_")[1];
+    const question = surveyData[questionIndex].question;
 
-function handleSubmit(event) {
-  event.preventDefault();
-
-  const fullName = document.getElementById("full-name").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const phone = document.getElementById("phone").value.trim();
-
-  if (!fullName || !email || !phone) {
-    console.error("All fields are required");
-    return;
+    const answerDiv = document.createElement("div");
+    answerDiv.innerHTML = `<p><strong>${question}</strong><br/>${value}</p>`;
+    questionContainer.appendChild(answerDiv);
   }
-
-  // Save user information
-  const userInfo = { fullName, email, phone };
-  localStorage.setItem("userInfo", JSON.stringify(userInfo));
-
-  // Redirect to another website
-  window.location.href =
-    "https://calendly.com/envisionenergie/kostenloses-strategiegesprach";
 }
 
 function initMap() {

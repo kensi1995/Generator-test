@@ -13,16 +13,12 @@ function preloadImages() {
 }
 
 // Initialize the survey questions and options
-const imagePath = "Icons/";
 const surveyData = [
   {
     question: "What renovation measures are you planning in the near future?",
     options: [
-      {
-        title: "Roof insulation",
-        imgSrc: `${imagePath}roof.png`,
-      },
-      { title: "Window replacement", imgSrc: `${imagePath}replacement.png` },
+      { title: "Roof insulation", imgSrc: "Icons/roof.png" },
+      { title: "Window replacement", imgSrc: "Icons/replacement.png" },
       { title: "Façade insulation", imgSrc: "Icons/construction.png" },
     ],
   },

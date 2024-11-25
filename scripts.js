@@ -362,4 +362,7 @@ function initMap() {
   });
 }
 
-loadQuestion();
+document.addEventListener("DOMContentLoaded", function () {
+  preloadImages();
+  loadQuestion();
+});

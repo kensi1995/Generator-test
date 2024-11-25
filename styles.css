@@ -32,13 +32,14 @@ body {
 }
 
 .card img {
-  max-width: 75%;
+  max-width: 47%;
   height: auto;
 }
 
 .card-title {
   margin-top: 10px;
-  font-size: 18px;
+  font-size: 20px;
+  font-weight: 600;
 }
 
 input[type="text"] {
@@ -47,6 +48,26 @@ input[type="text"] {
   margin-top: 10px;
   border: 1px solid #2ed8c3;
   border-radius: 5px;
+  font-size: 18px;
+}
+input[type="email"] {
+  padding: 13px;
+  width: 80%;
+  margin-top: 10px;
+  border: 1px solid #2ed8c3;
+  border-radius: 5px;
+  font-size: 18px;
+}
+input[type="tel"] {
+  padding: 13px;
+  width: 80%;
+  margin-top: 10px;
+  border: 1px solid #2ed8c3;
+  border-radius: 5px;
+  font-size: 18px;
+}
+.form-title {
+  color: #5c068c;
 }
 
 button {
@@ -58,6 +79,8 @@ button {
   border-radius: 5px;
   margin-top: 5%;
   cursor: pointer;
+  margin-bottom: 5%;
+  font-size: 19px;
 }
 
 button:hover {
@@ -70,14 +93,4 @@ button:active {
 
 #question-container {
   margin-top: 20px;
-}
-
-#back-button {
-  margin-top: 10px;
-  background-color: #ccc;
-}
-
-#next-button {
-  margin-top: 10px;
-  background-color: #007bff;
 }

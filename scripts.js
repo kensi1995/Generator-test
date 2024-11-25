@@ -6,12 +6,13 @@ function preloadImages() {
         if (option.imgSrc) {
           const img = new Image();
           img.src = option.imgSrc;
+          img.onerror = () =>
+            console.error(`Failed to load image: ${option.imgSrc}`);
         }
       });
     }
   });
 }
-
 // Initialize the survey questions and options
 const surveyData = [
   {
@@ -25,10 +26,10 @@ const surveyData = [
   {
     question: "How many residential units does the building have?",
     options: [
-      { title: "1-2 units", imgSrc: "Icons/apartments.png" },
-      { title: "3-5 units", imgSrc: "Icons/apartments.png" },
-      { title: "5-10 units", imgSrc: "Icons/apartments.png" },
-      { title: "10-20 units", imgSrc: "Icons/apartments.png" },
+      { title: "1-2 units", imgSrc: "Icons/1-2units.png" },
+      { title: "3-5 units", imgSrc: "Icons/4-5units.png" },
+      { title: "5-10 units", imgSrc: "Icons/5-10units.png" },
+      { title: "10-20 units", imgSrc: "Icons/10-20units.png" },
       { title: "More than 20 units", imgSrc: "Icons/apartments.png" },
     ],
   },
@@ -68,7 +69,7 @@ const surveyData = [
     question: "Have any renovation measures already been carried out?",
     options: [
       { title: "Roof insulation", imgSrc: "Icons/roof.png" },
-      { title: "Window replacement", imgSrc: "Icons/replacement.png " },
+      { title: "Window replacement", imgSrc: "Icons/replacement.png" },
       { title: "Façade insulation", imgSrc: "Icons/construction.png" },
     ],
   },
@@ -90,141 +91,278 @@ const surveyData = [
   },
   {
     question: "Enter your address",
+    type: "map",
     inputField: true,
     placeholder: "Enter your address",
-    type: "text",
   },
 ];
 
-// Store the answers
 let answers = {};
 let currentQuestionIndex = 0;
 
-// Function to load a question dynamically
 function loadQuestion() {
   const questionContainer = document.getElementById("question-container");
   const questionData = surveyData[currentQuestionIndex];
 
-  // Clear the container
+  if (!questionContainer || !questionData) {
+    console.error("Element or question data not found");
+    return;
+  }
+
   questionContainer.innerHTML = "";
 
-  // Create and style the <h2> element for the question
   const questionTitle = document.createElement("h2");
   questionTitle.textContent = questionData.question;
-  questionTitle.style.color = "#5c068c"; // Set the color to #5c068c
+  questionTitle.style.color = "#5c068c";
   questionTitle.style.textAlign = "center";
-
-  // Append the question title to the container
   questionContainer.appendChild(questionTitle);
 
-  if (questionData.inputField) {
-    // For ZIP, Address, and Email questions with input fields
-    questionContainer.innerHTML += `  
-      <input type="${questionData.type}" id="user-input" placeholder="${questionData.placeholder}">
-      <button onclick="handleInputSubmit()">Submit</button>
-    `;
+  if (questionData.type === "map") {
+    renderMapQuestion(questionContainer, questionData);
+  } else if (questionData.inputField) {
+    renderInputFieldQuestion(questionContainer, questionData);
   } else {
-    // Load options as cards for questions without input fields
-    questionData.options.forEach((option) => {
-      const card = document.createElement("div");
-      card.classList.add("card");
-      card.innerHTML = `
-        ${
-          option.imgSrc
-            ? `<img src="${option.imgSrc}" alt="${option.title}">`
-            : ""
-        }
-        <div class="card-title">${option.title}</div>
-      `;
-      card.addEventListener("click", () => handleOptionClick(option.title));
-      questionContainer.appendChild(card);
-    });
+    renderOptionsQuestion(questionContainer, questionData);
+  }
+}
+
+function renderMapQuestion(container, data) {
+  const mapDiv = document.createElement("div");
+  const addressInput = document.createElement("input");
+  const submitButton = document.createElement("button");
+
+  mapDiv.id = "map";
+  addressInput.id = "input-address";
+  addressInput.placeholder = data.placeholder;
+  submitButton.textContent = "Submit";
+  submitButton.onclick = handleAddressSubmit;
+
+  styleAddressInput(addressInput);
+  styleMapDiv(mapDiv);
+
+  container.appendChild(addressInput);
+  container.appendChild(submitButton);
+  container.appendChild(mapDiv);
+
+  initMap();
+}
+
+function styleAddressInput(input) {
+  input.style.padding = "13px";
+  input.style.width = "80%";
+  input.style.marginTop = "10px";
+  input.style.border = "1px solid #2ed8c3";
+  input.style.borderRadius = "5px";
+  input.style.marginBottom = "10%";
+  input.style.fontSize = "18px";
+}
+
+function styleMapDiv(mapDiv) {
+  mapDiv.style.height = "400px";
+}
+
+function renderInputFieldQuestion(container, data) {
+  container.innerHTML += `
+    <input type="${data.type}" id="user-input" placeholder="${data.placeholder}">
+    <button onclick="handleInputSubmit()">Submit</button>
+  `;
+}
+
+function renderOptionsQuestion(container, data) {
+  data.options.forEach((option) => {
+    const card = document.createElement("div");
+    card.classList.add("card");
+    card.innerHTML = `
+      ${
+        option.imgSrc
+          ? `<img src="${option.imgSrc}" alt="${option.title}">`
+          : ""
+      }
+      <div class="card-title">${option.title}</div>
+    `;
+    card.addEventListener("click", () => handleOptionClick(option.title));
+    container.appendChild(card);
+  });
+}
+
+function handleAddressSubmit() {
+  const userInput = document.getElementById("input-address").value.trim();
+  if (!userInput) {
+    console.error("No user input found");
+    return;
   }
 
-  // Add Back button below the options and question
-  if (currentQuestionIndex > 0) {
-    const backButton = document.createElement("button");
+  answers[`question_${currentQuestionIndex}`] = userInput;
+  localStorage.setItem("surveyAnswers", JSON.stringify(answers));
 
-    // Set the inner HTML to include SVG and text
-    backButton.innerHTML = `   
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="margin-right: 8px;">
-      <path d="M15.41 16.58L10.83 12l4.58-4.59L14 6l-6 6 6 6z" />
-    </svg>
-    Back
+  nextQuestion();
+}
+
+function handleInputSubmit() {
+  const userInput = document.getElementById("user-input").value.trim();
+  if (!userInput) {
+    console.error("No user input found");
+    return;
+  }
+
+  answers[`question_${currentQuestionIndex}`] = userInput;
+  localStorage.setItem("surveyAnswers", JSON.stringify(answers));
+
+  nextQuestion();
+}
+
+function handleOptionClick(selectedOption) {
+  answers[`question_${currentQuestionIndex}`] = selectedOption;
+  localStorage.setItem("surveyAnswers", JSON.stringify(answers));
+
+  nextQuestion();
+}
+
+function nextQuestion() {
+  currentQuestionIndex++;
+  if (currentQuestionIndex < surveyData.length) {
+    loadQuestion();
+  } else {
+    showForm();
+  }
+}
+
+function showForm() {
+  const questionContainer = document.getElementById("question-container");
+  questionContainer.innerHTML = `
+    <h2 class="form-title" >Enter your information</h2>
+    <form id="user-form">
+      <input type="text" id="full-name" placeholder="Full Name" required><br>
+      <input type="email" id="email" placeholder="Email" required><br>
+      <input type="tel" id="phone" placeholder="Phone Number" required><br>
+      <button type="submit">Submit</button>
+    </form>
   `;
 
-    // Apply initial styles to the button
-    Object.assign(backButton.style, {
-      backgroundColor: "transparent",
-      border: "none",
-      cursor: "pointer",
-      fontSize: "17px",
-      color: "#333",
-      textAlign: "center",
-      marginTop: "20px",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-
-      transition: "opacity 0.3s ease", // Smooth transition for hover effect
-    });
-
-    // Add hover effect for opacity
-    backButton.addEventListener("mouseover", () => {
-      backButton.style.opacity = "0.6";
-    });
-
-    backButton.addEventListener("mouseout", () => {
-      backButton.style.opacity = "1";
-    });
-
-    // Add click event to navigate back
-    backButton.addEventListener("click", () => {
-      currentQuestionIndex--;
-      loadQuestion();
-    });
-
-    // Add the Back button below everything (question and options)
-    questionContainer.appendChild(backButton);
-  }
+  const form = document.getElementById("user-form");
+  form.addEventListener("submit", handleSubmit);
 }
 
-// Handle option selection and move to the next question
-function handleOptionClick(selectedOption) {
-  // Save the answer
-  answers[`question_${currentQuestionIndex}`] = selectedOption;
+function handleSubmit(event) {
+  event.preventDefault();
 
-  // Save answers to localStorage (or send to server in a real app)
-  localStorage.setItem("surveyAnswers", JSON.stringify(answers));
+  const fullName = document.getElementById("full-name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const phone = document.getElementById("phone").value.trim();
 
-  // Move to the next question or finish the survey
-  currentQuestionIndex++;
-  if (currentQuestionIndex < surveyData.length) {
-    loadQuestion();
+  if (!fullName || !email || !phone) {
+    console.error("All fields are required");
+    return;
+  }
+
+  // Save user information
+  const userInfo = { fullName, email, phone };
+  localStorage.setItem("userInfo", JSON.stringify(userInfo));
+
+  // Redirect to another website
+  window.location.href =
+    "https://calendly.com/envisionenergie/kostenloses-strategiegesprach";
+}
+
+function initMap() {
+  console.log("Initializing map...");
+  var mapOptions = {
+    zoom: 12,
+  };
+  map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      function (position) {
+        var pos = new google.maps.LatLng(
+          position.coords.latitude,
+          position.coords.longitude
+        );
+        map.setCenter(pos);
+        marker = new google.maps.Marker({
+          position: pos,
+          map: map,
+          draggable: true,
+        });
+      },
+      function () {
+        handleNoGeolocation(true);
+      }
+    );
   } else {
-    alert("Survey completed!");
+    handleNoGeolocation(false);
   }
+
+  function handleNoGeolocation(errorFlag) {
+    var content = errorFlag
+      ? "Error: The Geolocation service failed."
+      : "Error: Your browser doesn't support geolocation.";
+    var options = {
+      map: map,
+      position: new google.maps.LatLng(60, 105),
+      content: content,
+    };
+    map.setCenter(options.position);
+    marker = new google.maps.Marker({
+      position: options.position,
+      map: map,
+      draggable: true,
+    });
+  }
+
+  var input = document.getElementById("input-address");
+  var autocomplete = new google.maps.places.Autocomplete(input);
+  autocomplete.bindTo("bounds", map);
+
+  var infowindow = new google.maps.InfoWindow();
+  marker = new google.maps.Marker({
+    map: map,
+    anchorPoint: new google.maps.Point(0, -29),
+    draggable: true,
+  });
+
+  google.maps.event.addListener(autocomplete, "place_changed", function () {
+    infowindow.close();
+    marker.setVisible(false);
+    var place = autocomplete.getPlace();
+    if (!place.geometry) {
+      console.error("Autocomplete's place contains no geometry");
+      return;
+    }
+
+    if (place.geometry.viewport) {
+      map.fitBounds(place.geometry.viewport);
+    } else {
+      map.setCenter(place.geometry.location);
+      map.setZoom(17);
+    }
+    marker.setIcon({
+      url: place.icon,
+      size: new google.maps.Size(71, 71),
+      origin: new google.maps.Point(0, 0),
+      anchor: new google.maps.Point(17, 34),
+      scaledSize: new google.maps.Size(35, 35),
+    });
+    marker.setPosition(place.geometry.location);
+    marker.setVisible(true);
+
+    var address = "";
+    if (place.address_components) {
+      address = [
+        (place.address_components[0] &&
+          place.address_components[0].short_name) ||
+          "",
+        (place.address_components[1] &&
+          place.address_components[1].short_name) ||
+          "",
+        (place.address_components[2] &&
+          place.address_components[2].short_name) ||
+          "",
+      ].join(" ");
+    }
+  });
 }
 
-// Handle input submission (for ZIP, Address, Email)
-function handleInputSubmit() {
-  const userInput = document.getElementById("user-input").value;
-  answers[`question_${currentQuestionIndex}`] = userInput;
-
-  // Save answers to localStorage
-  localStorage.setItem("surveyAnswers", JSON.stringify(answers));
-
-  // Move to the next question or finish the survey
-  currentQuestionIndex++;
-  if (currentQuestionIndex < surveyData.length) {
-    loadQuestion();
-  } else {
-    alert("Survey completed!");
-  }
-}
-
-// Preload images before starting the survey
-preloadImages();
-
-// Start the survey
-loadQuestion();
+document.addEventListener("DOMContentLoaded", function () {
+  loadQuestion();
+});

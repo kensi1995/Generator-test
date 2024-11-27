@@ -19,55 +19,55 @@ const surveyData = [
     options: [
       {
         title: "Roof insulation",
-        imgSrc: "Icons/roof.png",
+        imgSrc: "Icons/roof.webp",
       },
-      { title: "Window replacement", imgSrc: "Icons/replacement.png" },
-      { title: "Façade insulation", imgSrc: "Icons/construction.png" },
+      { title: "Window replacement", imgSrc: "Icons/replacement.webp" },
+      { title: "Façade insulation", imgSrc: "Icons/construction.webp" },
       {
         title: "Heating replacement",
-        imgSrc: "Icons/system.png",
+        imgSrc: "Icons/system.webp",
       },
       {
         title: "Floor or basement ceiling insulation",
-        imgSrc: "Icons/basement.png",
+        imgSrc: "Icons/basement.webp",
       },
-      { title: "Heating optimization", imgSrc: "Icons/heater.png" },
+      { title: "Heating optimization", imgSrc: "Icons/heater.webp" },
     ],
   },
   {
     question: "How many residential units does the building have?",
     options: [
-      { title: "1-2 units", imgSrc: "Icons/1-2units.png" },
-      { title: "3-5 units", imgSrc: "Icons/3-5units.png" },
-      { title: "5-10 units", imgSrc: "Icons/5-10units.png" },
-      { title: "10-20 units", imgSrc: "Icons/10-20units.png" },
-      { title: "More than 20 units", imgSrc: "Icons/apartments.png" },
+      { title: "1-2 units", imgSrc: "Icons/1-2units.webp" },
+      { title: "3-5 units", imgSrc: "Icons/3-5units.webp" },
+      { title: "5-10 units", imgSrc: "Icons/5-10units.webp" },
+      { title: "10-20 units", imgSrc: "Icons/10-20units.webp" },
+      { title: "More than 20 units", imgSrc: "Icons/apartments.webp" },
     ],
   },
   {
     question: "Is the building detached or attached?",
     options: [
-      { title: "Detached", imgSrc: "Icons/homeAlone.png" },
-      { title: "Attached", imgSrc: "Icons/housetwo.png" },
+      { title: "Detached", imgSrc: "Icons/homeAlone.webp" },
+      { title: "Attached", imgSrc: "Icons/housetwo.webp" },
     ],
   },
 
   {
     question: "Year of construction of the house?",
     options: [
-      { title: "Before 1920", imgSrc: "Icons/calendar.png" },
-      { title: "1920-1950", imgSrc: "Icons/calendar.png" },
-      { title: "1950-1970", imgSrc: "Icons/calendar.png" },
-      { title: "1970-1990", imgSrc: "Icons/calendar.png" },
-      { title: "After 1990", imgSrc: "Icons/calendar.png" },
+      { title: "Before 1920", imgSrc: "Icons/calendar.webp" },
+      { title: "1920-1950", imgSrc: "Icons/calendar.webp" },
+      { title: "1950-1970", imgSrc: "Icons/calendar.webp" },
+      { title: "1970-1990", imgSrc: "Icons/calendar.webp" },
+      { title: "After 1990", imgSrc: "Icons/calendar.webp" },
     ],
   },
   {
     question: "What heating system is installed?",
     options: [
-      { title: "Oil", imgSrc: "Icons/oil-barrel.png" },
-      { title: "Gas", imgSrc: "Icons/gas.png" },
-      { title: "Wood", imgSrc: "Icons/wood.png" },
+      { title: "Oil", imgSrc: "Icons/oil-barrel.webp" },
+      { title: "Gas", imgSrc: "Icons/gas.webp" },
+      { title: "Wood", imgSrc: "Icons/wood.webp" },
     ],
     type: "withInput",
   },
@@ -76,19 +76,19 @@ const surveyData = [
     options: [
       {
         title: "Roof insulation",
-        imgSrc: "Icons/roof.png",
+        imgSrc: "Icons/roof.webp",
       },
-      { title: "Window replacement", imgSrc: "Icons/replacement.png" },
-      { title: "Façade insulation", imgSrc: "Icons/construction.png" },
+      { title: "Window replacement", imgSrc: "Icons/replacement.webp" },
+      { title: "Façade insulation", imgSrc: "Icons/construction.webp" },
       {
         title: "Heating replacement",
-        imgSrc: "Icons/system.png",
+        imgSrc: "Icons/system.webp",
       },
       {
         title: "Floor or basement ceiling insulation",
-        imgSrc: "Icons/basement.png",
+        imgSrc: "Icons/basement.webp",
       },
-      { title: "Heating optimization", imgSrc: "Icons/heater.png" },
+      { title: "Heating optimization", imgSrc: "Icons/heater.webp" },
     ],
   },
   {

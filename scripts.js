@@ -143,11 +143,11 @@ function renderOptionsQuestion(container, data) {
     card.innerHTML = `
           ${
             option.imgSrc
-              ? `<img src="${option.imgSrc}" alt="${option.title}">`
+              ? `<img class="lazyload" data-src="${option.imgSrc}" alt="${option.title}">`
               : ""
           }
           <div class="card-title">${option.title}</div>
-        `;
+      `;
     card.addEventListener("click", () => handleOptionClick(option.title));
     container.appendChild(card);
   });

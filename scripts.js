@@ -411,11 +411,26 @@ async function handleSubmit(event) {
       "3NyKajjvLf1Aa8z2q"
     );
     console.log("SUCCESS!", response.status, response.text);
-    // Redirect to another website
     window.alert("The application has been sent!"); // Add your redirect URL here
+    event.target.reset();
+
+    // Reset survey data and reload the first question
+    resetSurvey();
+    // Redirect to another website
   } catch (error) {
     console.error("FAILED...", error);
   }
+}
+
+function resetSurvey() {
+  const currentQuestionIndex = 0;
+  const answers = {};
+
+  // Clear local storage if necessary
+  localStorage.removeItem("surveyAnswers");
+
+  // Load the first question
+  loadQuestion(currentQuestionIndex, answers, surveyData);
 }
 
 function initMap() {

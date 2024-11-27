@@ -1,27 +1,9 @@
-function formatAnswers(answers) {
-  const questionsMap = {
-    question_0: "What renovation measures are you planning in the near future?",
-    question_1: "How many residential units does the building have?",
-    question_2: "Is the building detached or attached?",
-    question_3: "Year of construction of the house?",
-    question_4: "What heating system is installed?",
-    question_5: "Have any renovation measures already been carried out?",
-    question_6: "How expensive will these measures be approximately?",
-    question_7: "Enter your address",
-  };
+// emailService.js
+import { formatAnswers } from "./helpers.js";
+import { loadQuestion } from "./questionRenderer.js";
+import { surveyData } from "./surveyData.js";
 
-  let formattedAnswers = "";
-  for (const [key, value] of Object.entries(answers)) {
-    formattedAnswers += `
-          <div style="margin-bottom: 15px;">
-              <p><strong>Question:</strong> ${questionsMap[key]}</p>
-              <p><strong>Answer:</strong> ${value}</p>
-          </div>`;
-  }
-  return formattedAnswers;
-}
-
-async function handleSubmit(event) {
+export async function handleSubmit(event, answers) {
   event.preventDefault();
 
   const fullName = document.getElementById("full-name").value.trim();
@@ -33,42 +15,46 @@ async function handleSubmit(event) {
     return;
   }
 
-  // Save user information
   const userInfo = { fullName, email, phone };
   localStorage.setItem("userInfo", JSON.stringify(userInfo));
-
-  // Prepare formatted answers
   const formattedAnswers = formatAnswers(answers);
 
-  // Prepare data to send via EmailJS
   const templateParams = {
     fullName,
     email,
     phone,
-    answers: formattedAnswers, // Use formatted answers
+    answers: formattedAnswers,
   };
 
   try {
     const response = await emailjs.send(
-      "YOUR_SERVICE_ID",
-      "YOUR_TEMPLATE_ID",
-      templateParams
+      "service_ui0u0kj",
+      "template_6hexsfp",
+      templateParams,
+      "3NyKajjvLf1Aa8z2q"
     );
     console.log("SUCCESS!", response.status, response.text);
-    // Redirect to another website
-    window.location.href = ""; // Add your redirect URL here
+
+    // Clear the form
+    event.target.reset();
+
+    // Reset survey data and reload the first question
+    resetSurvey();
+
+    // Alert the user
+    window.alert("The application has been sent!");
   } catch (error) {
     console.error("FAILED...", error);
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  loadQuestion();
-  preloadImages();
+function resetSurvey() {
+  const currentQuestionIndex = 0;
+  const answers = {};
 
-  // Attach handleSubmit to the form
-  const form = document.getElementById("user-form");
-  if (form) {
-    form.addEventListener("submit", handleSubmit);
-  }
-});
+  // Clear local storage if necessary
+  localStorage.removeItem("surveyAnswers");
+
+  // Load the first question
+  loadQuestion(currentQuestionIndex, answers, surveyData);
+}

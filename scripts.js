@@ -17,22 +17,28 @@ const surveyData = [
   {
     question: "What renovation measures are you planning in the near future?",
     options: [
-      { title: "Roof insulation", imgSrc: "Icons/roof.png" },
+      {
+        title: "Roof insulation",
+        imgSrc: "Icons/roof.png",
+      },
       { title: "Window replacement", imgSrc: "Icons/replacement.png" },
       { title: "Façade insulation", imgSrc: "Icons/construction.png" },
-      { title: "Heating replacement", imgSrc: "Icons/construction.png" },
       {
-        title: "Floor and basement ceiling insulation",
-        imgSrc: "Icons/construction.png",
+        title: "Heating replacement",
+        imgSrc: "Icons/system.png",
       },
-      { title: "Heating optimization", imgSrc: "Icons/construction.png" },
+      {
+        title: "Floor or basement ceiling insulation",
+        imgSrc: "Icons/basement.png",
+      },
+      { title: "Heating optimization", imgSrc: "Icons/heater.png" },
     ],
   },
   {
     question: "How many residential units does the building have?",
     options: [
       { title: "1-2 units", imgSrc: "Icons/1-2units.png" },
-      { title: "3-5 units", imgSrc: "Icons/4-5units.png" },
+      { title: "3-5 units", imgSrc: "Icons/3-5units.png" },
       { title: "5-10 units", imgSrc: "Icons/5-10units.png" },
       { title: "10-20 units", imgSrc: "Icons/10-20units.png" },
       { title: "More than 20 units", imgSrc: "Icons/apartments.png" },
@@ -41,17 +47,11 @@ const surveyData = [
   {
     question: "Is the building detached or attached?",
     options: [
-      { title: "Detached", imgSrc: "Icons/building.png" },
-      { title: "Attached", imgSrc: "Icons/building-att.png" },
+      { title: "Detached", imgSrc: "Icons/homeAlone.png" },
+      { title: "Attached", imgSrc: "Icons/housetwo.png" },
     ],
   },
-  {
-    question: "Do you live in it yourself?",
-    options: [
-      { title: "Yes", imgSrc: "Icons/check.png" },
-      { title: "No", imgSrc: "Icons/cancel.png" },
-    ],
-  },
+
   {
     question: "Year of construction of the house?",
     options: [
@@ -69,31 +69,36 @@ const surveyData = [
       { title: "Gas", imgSrc: "Icons/gas.png" },
       { title: "Wood", imgSrc: "Icons/wood.png" },
     ],
+    type: "withInput",
   },
   {
     question: "Have any renovation measures already been carried out?",
     options: [
-      { title: "Roof insulation", imgSrc: "Icons/roof.png" },
+      {
+        title: "Roof insulation",
+        imgSrc: "Icons/roof.png",
+      },
       { title: "Window replacement", imgSrc: "Icons/replacement.png" },
       { title: "Façade insulation", imgSrc: "Icons/construction.png" },
+      {
+        title: "Heating replacement",
+        imgSrc: "Icons/system.png",
+      },
+      {
+        title: "Floor or basement ceiling insulation",
+        imgSrc: "Icons/basement.png",
+      },
+      { title: "Heating optimization", imgSrc: "Icons/heater.png" },
     ],
   },
   {
     question: "How expensive will these measures be approximately?",
-    options: [
-      { title: "Under €20,000", imgSrc: "Icons/money-bag.png" },
-      { title: "€20,000-€40,000", imgSrc: "Icons/money-bag.png" },
-      { title: "€40,000-€60,000", imgSrc: "Icons/money-bag.png" },
-      { title: "€60,000-€100,000", imgSrc: "Icons/money-bag.png" },
-      { title: "Over €100,000", imgSrc: "Icons/money-bag.png" },
-    ],
+    type: "slider",
+    min: 0,
+    max: 500000,
+    step: 20000,
   },
-  {
-    question: "Postal code (ZIP)?",
-    inputField: true,
-    placeholder: "Enter your ZIP code",
-    type: "text",
-  },
+
   {
     question: "Enter your address",
     type: "map",
@@ -106,88 +111,65 @@ let answers = {};
 let currentQuestionIndex = 0;
 
 function loadQuestion() {
-  const questionContainer = document.getElementById("question-container");
+  const questionContainer = document.getElementById("dynamic-container");
   const questionData = surveyData[currentQuestionIndex];
-
   if (!questionContainer || !questionData) {
     console.error("Element or question data not found");
     return;
   }
-
   questionContainer.innerHTML = "";
-
-  const questionTitle = document.createElement("h2");
+  const questionTitle = document.createElement("div");
   questionTitle.textContent = questionData.question;
+  questionTitle.style.width = "100%";
+  questionTitle.style.fontSize = "1.5em";
   questionTitle.style.color = "#5c068c";
+  questionTitle.style.fontWeight = "600";
   questionTitle.style.textAlign = "center";
   questionContainer.appendChild(questionTitle);
-
   if (questionData.type === "map") {
     renderMapQuestion(questionContainer, questionData);
   } else if (questionData.inputField) {
     renderInputFieldQuestion(questionContainer, questionData);
+  } else if (questionData.type === "slider") {
+    renderSliderQuestion(questionContainer, questionData);
   } else {
     renderOptionsQuestion(questionContainer, questionData);
   }
 }
-
-function renderMapQuestion(container, data) {
-  const mapDiv = document.createElement("div");
-  const addressInput = document.createElement("input");
-  const submitButton = document.createElement("button");
-
-  mapDiv.id = "map";
-  addressInput.id = "input-address";
-  addressInput.placeholder = data.placeholder;
-  submitButton.textContent = "Submit";
-  submitButton.onclick = handleAddressSubmit;
-
-  styleAddressInput(addressInput);
-  styleMapDiv(mapDiv);
-
-  container.appendChild(addressInput);
-  container.appendChild(submitButton);
-  container.appendChild(mapDiv);
-
-  initMap();
-}
-
-function styleAddressInput(input) {
-  input.style.padding = "13px";
-  input.style.width = "80%";
-  input.style.marginTop = "10px";
-  input.style.border = "1px solid #2ed8c3";
-  input.style.borderRadius = "5px";
-  input.style.marginBottom = "10%";
-  input.style.fontSize = "18px";
-}
-
-function styleMapDiv(mapDiv) {
-  mapDiv.style.height = "400px";
-}
-
-function renderInputFieldQuestion(container, data) {
-  container.innerHTML += `
-    <input type="${data.type}" id="user-input" placeholder="${data.placeholder}">
-    <button onclick="handleInputSubmit()">Submit</button>
-  `;
-}
-
 function renderOptionsQuestion(container, data) {
   data.options.forEach((option) => {
     const card = document.createElement("div");
     card.classList.add("card");
     card.innerHTML = `
-      ${
-        option.imgSrc
-          ? `<img src="${option.imgSrc}" alt="${option.title}">`
-          : ""
-      }
-      <div class="card-title">${option.title}</div>
-    `;
+          ${
+            option.imgSrc
+              ? `<img src="${option.imgSrc}" alt="${option.title}">`
+              : ""
+          }
+          <div class="card-title">${option.title}</div>
+        `;
     card.addEventListener("click", () => handleOptionClick(option.title));
     container.appendChild(card);
   });
+
+  if (data.type === "withInput") {
+    // Adding an input field and submit button
+    const inputContainer = document.createElement("div");
+    inputContainer.classList.add("input-container");
+
+    const inputField = document.createElement("input");
+    inputField.type = "text";
+    inputField.id = "other-input";
+    inputField.placeholder = "Other (please specify)";
+
+    const submitButton = document.createElement("button");
+    submitButton.textContent = "Submit";
+    submitButton.onclick = handleOtherInputSubmit;
+
+    inputContainer.appendChild(inputField);
+    inputContainer.appendChild(submitButton);
+    container.appendChild(inputContainer);
+  }
 }
 
 function handleAddressSubmit() {
@@ -202,17 +184,14 @@ function handleAddressSubmit() {
 
   nextQuestion();
 }
-
-function handleInputSubmit() {
-  const userInput = document.getElementById("user-input").value.trim();
+function handleOtherInputSubmit() {
+  const userInput = document.getElementById("other-input").value.trim();
   if (!userInput) {
     console.error("No user input found");
     return;
   }
-
   answers[`question_${currentQuestionIndex}`] = userInput;
   localStorage.setItem("surveyAnswers", JSON.stringify(answers));
-
   nextQuestion();
 }
 
@@ -222,6 +201,130 @@ function handleOptionClick(selectedOption) {
 
   nextQuestion();
 }
+function renderSliderQuestion(container, data) {
+  const sliderContainer = document.createElement("div");
+  sliderContainer.classList.add("slider-container");
+
+  const slider = document.createElement("input");
+  slider.type = "range";
+  slider.min = data.min;
+  slider.max = data.max;
+  slider.step = data.step;
+  slider.value = data.min;
+  slider.id = "cost-slider";
+
+  const sliderValue = document.createElement("span");
+  sliderValue.id = "slider-value";
+  sliderValue.textContent = `${data.min}€`;
+
+  slider.oninput = function () {
+    sliderValue.textContent = `${slider.value}€`;
+  };
+
+  sliderContainer.appendChild(slider);
+  sliderContainer.appendChild(sliderValue);
+
+  const submitButton = document.createElement("button");
+  submitButton.textContent = "Submit";
+  submitButton.onclick = handleSliderSubmit;
+
+  sliderContainer.appendChild(submitButton);
+  container.appendChild(sliderContainer);
+}
+
+function handleSliderSubmit() {
+  const sliderValue = document.getElementById("cost-slider").value;
+  answers[`question_${currentQuestionIndex}`] = `${sliderValue}€`;
+  localStorage.setItem("surveyAnswers", JSON.stringify(answers));
+
+  nextQuestion();
+}
+
+function renderMapQuestion(container, data) {
+  // Create the single parent div
+  const singleContainer = document.createElement("div");
+
+  // Create the input, button, and map elements
+  const addressInput = document.createElement("input");
+  const submitButton = document.createElement("button");
+  const mapDiv = document.createElement("div");
+
+  // Set attributes and content for the elements
+  addressInput.id = "input-address";
+  addressInput.placeholder = data.placeholder;
+  submitButton.textContent = "Submit";
+  submitButton.className = "addressMapBtn";
+  mapDiv.id = "map";
+
+  // Attach functionality to the button
+  submitButton.onclick = handleAddressSubmit;
+
+  // Append the input, button, and map to the single parent div
+  singleContainer.appendChild(addressInput);
+  singleContainer.appendChild(submitButton);
+  singleContainer.appendChild(mapDiv);
+
+  // Style the parent container
+  singleContainer.style.width = "900px";
+  singleContainer.style.display = "flex";
+  singleContainer.style.flexDirection = "column";
+  singleContainer.style.gap = "30px";
+  singleContainer.style.alignItems = "center";
+  singleContainer.style.marginTop = "20px";
+
+  // Style individual elements
+  styleAddressInput(addressInput);
+  styleSubmitButton(submitButton);
+  styleMapDiv(mapDiv);
+
+  // Append the parent div to the provided container
+  container.appendChild(singleContainer);
+
+  // Initialize the map
+  initMap();
+}
+
+function styleAddressInput(input) {
+  input.style.padding = "16px";
+  input.style.width = "80%";
+  input.style.border = "1px solid #2ed8c3";
+  input.style.borderRadius = "5px";
+  input.style.fontSize = "18px";
+}
+
+function styleSubmitButton(button) {
+  button.style.padding = "10px 20px";
+  button.style.backgroundColor = "#6dffee";
+  button.style.color = "#000000";
+  button.style.border = "none";
+  button.style.borderRadius = "5px";
+  button.style.cursor = "pointer";
+  button.style.fontSize = "16px";
+
+  // Add hover effect using event listeners
+  button.addEventListener("mouseenter", () => {
+    button.style.backgroundColor = "#2ed8c3"; // Change background color on hover
+  });
+
+  button.addEventListener("mouseleave", () => {
+    button.style.backgroundColor = "#6dffee"; // Revert to original background color
+    button.style.color = "#000000"; // Revert to original text color
+  });
+}
+
+function styleMapDiv(mapDiv) {
+  mapDiv.style.height = "400px";
+  mapDiv.style.width = "80%";
+  mapDiv.style.border = "1px solid #ddd";
+  mapDiv.style.borderRadius = "5px";
+}
+
+function renderInputFieldQuestion(container, data) {
+  container.innerHTML += `
+        <input type="${data.type}" id="user-input" placeholder="${data.placeholder}">
+        <button onclick="handleInputSubmit()">Submit</button>
+      `;
+}
 
 function nextQuestion() {
   currentQuestionIndex++;
@@ -229,27 +332,51 @@ function nextQuestion() {
     loadQuestion();
   } else {
     showForm();
-    sendSurveyData(); // Call this function to send the survey data via email
   }
 }
 
 function showForm() {
-  const questionContainer = document.getElementById("question-container");
+  const questionContainer = document.getElementById("dynamic-container");
   questionContainer.innerHTML = `
-    <h2 class="form-title">Enter your information</h2>
-    <form id="user-form">
-      <input type="text" id="full-name" placeholder="Full Name" required><br>
-      <input type="email" id="email" placeholder="Email" required><br>
-      <input type="tel" id="phone" placeholder="Phone Number" required><br>
-      <button type="submit">Submit</button>
-    </form>
-  `;
+  <div  class="formDivStyle">
+        <h2 class="form-title">Enter your information</h2>
+        <form id="user-form"class="formEditStyle" >
+          <input type="text" id="full-name" placeholder="Full Name" required><br>
+          <input type="email" id="email" placeholder="Email" required><br>
+          <input type="tel" id="phone" placeholder="Phone Number" required><br>
+          <button class="formBtn" type="submit">Submit</button>
+        </form>
+        </div>
+      `;
 
   const form = document.getElementById("user-form");
   form.addEventListener("submit", handleSubmit);
 }
+//Format question in email
+function formatAnswers(answers) {
+  const questionsMap = {
+    question_0: "What renovation measures are you planning in the near future?",
+    question_1: "How many residential units does the building have?",
+    question_2: "Is the building detached or attached?",
+    question_3: "Year of construction of the house?",
+    question_4: "What heating system is installed?",
+    question_5: "Have any renovation measures already been carried out?",
+    question_6: "How expensive will these measures be approximately?",
+    question_7: "Enter your address",
+  };
 
-function handleSubmit(event) {
+  let formattedAnswers = "";
+  for (const [key, value] of Object.entries(answers)) {
+    formattedAnswers += `
+          <div style="margin-bottom: 15px;">
+              <p><strong>Question:</strong> ${questionsMap[key]}</p>
+              <p><strong>Answer:</strong> ${value}</p>
+          </div>`;
+  }
+  return formattedAnswers;
+}
+
+async function handleSubmit(event) {
   event.preventDefault();
 
   const fullName = document.getElementById("full-name").value.trim();
@@ -265,13 +392,37 @@ function handleSubmit(event) {
   const userInfo = { fullName, email, phone };
   localStorage.setItem("userInfo", JSON.stringify(userInfo));
 
-  // Redirect to another website
-  window.location.href = "";
+  // Prepare formatted answers
+  const formattedAnswers = formatAnswers(answers);
+
+  // Prepare data to send via EmailJS
+  const templateParams = {
+    fullName,
+    email,
+    phone,
+    answers: formattedAnswers, // Use formatted answers
+  };
+
+  try {
+    const response = await emailjs.send(
+      "service_ui0u0kj",
+      "template_6hexsfp",
+      templateParams,
+      "3NyKajjvLf1Aa8z2q"
+    );
+    console.log("SUCCESS!", response.status, response.text);
+    // Redirect to another website
+    window.alert("The application has been sent!"); // Add your redirect URL here
+  } catch (error) {
+    console.error("FAILED...", error);
+  }
 }
+
 function initMap() {
   console.log("Initializing map...");
   var mapOptions = {
-    zoom: 12,
+    mapTypeId: "satellite",
+    zoom: 14,
   };
   map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
@@ -371,33 +522,3 @@ document.addEventListener("DOMContentLoaded", function () {
   loadQuestion();
   preloadImages();
 });
-
-// Function to send survey data via EmailJS
-function sendSurveyData() {
-  const userData = JSON.stringify(answers); // Assuming 'answers' contains the survey data
-
-  emailjs
-    .send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
-      message: userData,
-      to_email: "kenannovalic2@gmail.com", // Replace with your recipient's email
-    })
-    .then(
-      (response) => {
-        console.log("Email sent successfully!", response.status, response.text);
-      },
-      (error) => {
-        console.error("Failed to send email.", error);
-      }
-    );
-}
-
-// Modify your nextQuestion function to call sendSurveyData
-function nextQuestion() {
-  currentQuestionIndex++;
-  if (currentQuestionIndex < surveyData.length) {
-    loadQuestion();
-  } else {
-    showForm();
-    sendSurveyData(); // Call this function to send the survey data via email
-  }
-}

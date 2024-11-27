@@ -1,29 +1,35 @@
 body {
   font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
   margin: 0;
   padding: 0;
+  background-color: #f9f9f9;
 }
 
 .container {
-  max-height: 100px;
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 20px;
-  text-align: center;
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 10px;
+}
+
+#dynamic-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
 }
 
 .card {
-  display: inline-block;
-  width: 200px;
-  margin: 10px;
-  padding: 15px;
-  background-color: #fff;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  border: 1px solid #ddd;
   border-radius: 8px;
-  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   text-align: center;
+  width: 200px;
+  padding: 15px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
 }
+
 .card:hover {
   background-color: #6dffee;
 }
@@ -42,8 +48,17 @@ body {
   font-weight: 600;
 }
 
+.input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  width: 100%;
+  margin-top: 20px;
+}
+
 input[type="text"] {
-  padding: 13px;
+  padding: 16px;
   width: 80%;
   margin-top: 10px;
   border: 1px solid #2ed8c3;
@@ -51,7 +66,7 @@ input[type="text"] {
   font-size: 18px;
 }
 input[type="email"] {
-  padding: 13px;
+  padding: 16px;
   width: 80%;
   margin-top: 10px;
   border: 1px solid #2ed8c3;
@@ -59,38 +74,90 @@ input[type="email"] {
   font-size: 18px;
 }
 input[type="tel"] {
-  padding: 13px;
+  padding: 16px;
   width: 80%;
   margin-top: 10px;
   border: 1px solid #2ed8c3;
   border-radius: 5px;
   font-size: 18px;
 }
-.form-title {
-  color: #5c068c;
-}
-
-button {
+.input-container button {
   padding: 10px 20px;
-  margin-left: 10px;
+  font-size: 16px;
+  color: #000000;
   background-color: #6dffee;
-  color: black;
   border: none;
-  border-radius: 5px;
-  margin-top: 5%;
+  border-radius: 4px;
   cursor: pointer;
-  margin-bottom: 5%;
-  font-size: 19px;
+}
+.formDivStyle {
+  width: 900px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.formDivStyle h2 {
+  color: rgb(92, 6, 140);
+}
+.formEditStyle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  text-align: center;
 }
 
-button:hover {
-  background-color: #27cdba;
+.formBtn {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #000000;
+  background-color: #6dffee;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: auto;
+}
+.formBtn:hover {
+  background-color: #2ed8c3;
 }
 
-button:active {
-  background-color: #21ab9b;
+.slider-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-top: 30px;
+  width: 80%;
+}
+input[type="range"] {
+  width: 100%;
+  margin: 10px 0;
+}
+#slider-value {
+  font-size: 25px;
+  font-weight: bold;
+}
+.slider-container button {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #000000;
+  background-color: #6dffee;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.slider-container button:hover {
+  background-color: #2ed8c3;
 }
 
-#question-container {
-  margin-top: 20px;
+.input-container button:hover,
+.addressMapBtn:hover {
+  background-color: #2ed8c3;
+}
+
+@media (max-width: 768px) {
+  .dynamic-container {
+    flex-direction: column;
+    align-items: center;
+  }
 }

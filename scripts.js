@@ -332,13 +332,13 @@ function renderInputFieldQuestion(container, data) {
 
 function nextQuestion() {
   currentQuestionIndex++;
+  const questionContainer = document.getElementById("dynamic-container");
+  questionContainer.classList.remove("fade-in"); // Remove the class if it was added before
+  void questionContainer.offsetWidth; // Trigger reflow
+
   if (currentQuestionIndex < surveyData.length) {
-    // Add fade-in effect
-    const questionContainer = document.getElementById("dynamic-container");
-    questionContainer.classList.remove("fade-in"); // Remove the class if it was added before
-    void questionContainer.offsetWidth; // Trigger reflow
-    questionContainer.classList.add("fade-in");
     loadQuestion();
+    questionContainer.classList.add("fade-in"); // Add the fade-in class again
   } else {
     showForm();
   }
@@ -347,7 +347,7 @@ function nextQuestion() {
 function showForm() {
   const questionContainer = document.getElementById("dynamic-container");
   questionContainer.innerHTML = `
-  <div  class="formDivStyle">
+  <div  class="formDivStyle fade-in"> <!-- Added the fade-in class here -->
         <h2 class="form-title">Enter your information</h2>
         <form id="user-form"class="formEditStyle" >
           <input type="text" id="full-name" placeholder="Full Name" required><br>
@@ -361,6 +361,7 @@ function showForm() {
   const form = document.getElementById("user-form");
   form.addEventListener("submit", handleSubmit);
 }
+
 //Format question in email
 function formatAnswers(answers) {
   const questionsMap = {

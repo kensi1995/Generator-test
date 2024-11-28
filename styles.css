@@ -119,7 +119,6 @@ input[type="tel"] {
 }
 .slider-container {
   width: 80%;
-
   text-align: center;
   margin-top: 5%;
 }
@@ -169,7 +168,7 @@ input[type="tel"] {
   font-size: 18px;
 }
 .slider-container button {
-  margin-top: 5%;
+  margin-top: 6%;
   padding: 10px 20px;
   background-color: rgb(109, 255, 238);
   color: rgb(0, 0, 0);

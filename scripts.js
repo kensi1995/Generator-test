@@ -118,6 +118,8 @@ function loadQuestion() {
     return;
   }
   questionContainer.innerHTML = "";
+  questionContainer.classList.add("fade-in"); // Add the fade-in class
+
   const questionTitle = document.createElement("div");
   questionTitle.textContent = questionData.question;
   questionTitle.style.width = "100%";
@@ -126,6 +128,7 @@ function loadQuestion() {
   questionTitle.style.fontWeight = "600";
   questionTitle.style.textAlign = "center";
   questionContainer.appendChild(questionTitle);
+
   if (questionData.type === "map") {
     renderMapQuestion(questionContainer, questionData);
   } else if (questionData.inputField) {
@@ -136,6 +139,7 @@ function loadQuestion() {
     renderOptionsQuestion(questionContainer, questionData);
   }
 }
+
 function renderOptionsQuestion(container, data) {
   data.options.forEach((option) => {
     const card = document.createElement("div");
@@ -329,6 +333,11 @@ function renderInputFieldQuestion(container, data) {
 function nextQuestion() {
   currentQuestionIndex++;
   if (currentQuestionIndex < surveyData.length) {
+    // Add fade-in effect
+    const questionContainer = document.getElementById("dynamic-container");
+    questionContainer.classList.remove("fade-in"); // Remove the class if it was added before
+    void questionContainer.offsetWidth; // Trigger reflow
+    questionContainer.classList.add("fade-in");
     loadQuestion();
   } else {
     showForm();

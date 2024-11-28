@@ -154,6 +154,18 @@ input[type="range"] {
 .addressMapBtn:hover {
   background-color: #2ed8c3;
 }
+.fade-in {
+  animation: fadeIn 2s forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 2;
+  }
+}
 
 @media (max-width: 768px) {
   .dynamic-container {

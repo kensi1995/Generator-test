@@ -222,16 +222,20 @@ function renderSliderQuestion(container, data) {
   sliderValue.textContent = `${data.min}€`;
 
   slider.oninput = function () {
-    sliderValue.textContent = `${slider.value}€`;
+    sliderValue.textContent = `${parseInt(slider.value).toLocaleString()}€`;
   };
-
-  sliderContainer.appendChild(slider);
-  sliderContainer.appendChild(sliderValue);
 
   const submitButton = document.createElement("button");
   submitButton.textContent = "Submit";
   submitButton.onclick = handleSliderSubmit;
 
+  const sliderMarkers = document.createElement("div");
+  sliderMarkers.className = "slider-markers";
+  sliderMarkers.innerHTML = `<span>0€</span><span>500,000€</span>`;
+
+  sliderContainer.appendChild(slider);
+  sliderContainer.appendChild(sliderValue);
+  sliderContainer.appendChild(sliderMarkers);
   sliderContainer.appendChild(submitButton);
   container.appendChild(sliderContainer);
 }

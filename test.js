@@ -1,60 +1,43 @@
-// emailService.js
-import { formatAnswers } from "./helpers.js";
-import { loadQuestion } from "./questionRenderer.js";
-import { surveyData } from "./surveyData.js";
+function renderSliderQuestion(container, data) {
+  const sliderContainer = document.createElement("div");
+  sliderContainer.classList.add("slider-container");
 
-export async function handleSubmit(event, answers) {
-  event.preventDefault();
+  const slider = document.createElement("input");
+  slider.type = "range";
+  slider.min = data.min;
+  slider.max = data.max;
+  slider.step = data.step;
+  slider.value = data.min;
+  slider.id = "cost-slider";
 
-  const fullName = document.getElementById("full-name").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const phone = document.getElementById("phone").value.trim();
+  const sliderValue = document.createElement("span");
+  sliderValue.id = "slider-value";
+  sliderValue.textContent = `${data.min}€`;
 
-  if (!fullName || !email || !phone) {
-    console.error("All fields are required");
-    return;
-  }
+  slider.oninput = function () {
+    const value = parseInt(slider.value);
+    sliderValue.textContent = `${value.toLocaleString()}€`;
 
-  const userInfo = { fullName, email, phone };
-  localStorage.setItem("userInfo", JSON.stringify(userInfo));
-  const formattedAnswers = formatAnswers(answers);
+    // Calculate the background color based on the slider value
+    const percentage = (value - slider.min) / (slider.max - slider.min);
+    const color = `rgb(${Math.round(255 - 255 * percentage)}, ${Math.round(
+      255 * percentage
+    )}, ${Math.round(200 + 55 * (1 - percentage))})`;
 
-  const templateParams = {
-    fullName,
-    email,
-    phone,
-    answers: formattedAnswers,
+    sliderContainer.style.backgroundColor = color;
   };
 
-  try {
-    const response = await emailjs.send(
-      "service_ui0u0kj",
-      "template_6hexsfp",
-      templateParams,
-      "3NyKajjvLf1Aa8z2q"
-    );
-    console.log("SUCCESS!", response.status, response.text);
+  const submitButton = document.createElement("button");
+  submitButton.textContent = "Submit";
+  submitButton.onclick = handleSliderSubmit;
 
-    // Clear the form
-    event.target.reset();
+  const sliderMarkers = document.createElement("div");
+  sliderMarkers.className = "slider-markers";
+  sliderMarkers.innerHTML = `<span>0€</span><span>500,000€</span>`;
 
-    // Reset survey data and reload the first question
-    resetSurvey();
-
-    // Alert the user
-    window.alert("The application has been sent!");
-  } catch (error) {
-    console.error("FAILED...", error);
-  }
-}
-
-function resetSurvey() {
-  const currentQuestionIndex = 0;
-  const answers = {};
-
-  // Clear local storage if necessary
-  localStorage.removeItem("surveyAnswers");
-
-  // Load the first question
-  loadQuestion(currentQuestionIndex, answers, surveyData);
+  sliderContainer.appendChild(slider);
+  sliderContainer.appendChild(sliderValue);
+  sliderContainer.appendChild(submitButton);
+  sliderContainer.appendChild(sliderMarkers);
+  container.appendChild(sliderContainer);
 }

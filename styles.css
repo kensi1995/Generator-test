@@ -155,7 +155,7 @@ input[type="range"] {
   background-color: #2ed8c3;
 }
 .fade-in {
-  animation: fadeIn 2s forwards;
+  animation: fadeIn 2.5s forwards;
 }
 
 @keyframes fadeIn {
